@@ -20,6 +20,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/gnanderson/rbh/firewall"
 	"github.com/gnanderson/xrpl"
 	"github.com/spf13/cobra"
 )
@@ -50,7 +51,7 @@ func init() {
 func run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	n := xrpl.NewNode(nodeAddr)
-	firewall := newFirewall()
+	fw := firewall.NewFirewall(banLength)
 
 	cmd := xrpl.NewPeerCommand()
 	cmd.AdminUser = "graham"
@@ -61,7 +62,7 @@ func run() error {
 		cmd,
 		10,
 	) {
-		if err := fwdCheck(); err != nil {
+		if err := firewall.Connect(); err != nil {
 			log.Println(err)
 		}
 
@@ -78,8 +79,8 @@ func run() error {
 
 		for _, peer := range pl.Unstable() {
 			if !peer.StableWith(xrpl.DefaultStabilityChecker) {
-				if fwdUp {
-					firewall.banPeer(peer)
+				if firewall.Up() {
+					fw.BanPeer(peer)
 				}
 			}
 		}

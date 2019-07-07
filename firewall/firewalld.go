@@ -1,4 +1,4 @@
-package cmd
+package firewall
 
 /*
 Copyright © 2019 Graham Anderson <graham@grahamanderson.scot>
@@ -75,9 +75,9 @@ func (rr *rejectRule) String() string {
 	)
 }
 
-// Query DBUS to see if we can retreive the firewalld default zone and therefor
-// understand if firewalld is up
-func fwdCheck() (err error) {
+// Connect queries DBUS to see if we can retreive the firewalld default zone and
+// therefor understand if firewalld is up
+func Connect() (err error) {
 	if dbusConn, err = dbus.SystemBus(); err != nil {
 		fwdUp = false
 		return err
@@ -93,6 +93,11 @@ func fwdCheck() (err error) {
 	fwdUp = true
 
 	return nil
+}
+
+// Up returns true if firewalld is available to use
+func Up() bool {
+	return fwdUp
 }
 
 // If the service tries to add an existing rich rule specify this error so we
@@ -165,24 +170,27 @@ func (wl *whitelist) containrs(peer xrpl.Peer) bool {
 	return false
 }
 
-type firewall struct {
+// Firewall is a wrapper round `firewalld` that provides functionality for
+// temporarily banning XRPL peer nodes
+type Firewall struct {
 	whitelist *whitelist
 	blacklist *blacklist
 }
 
-func newFirewall() *firewall {
-	return &firewall{
+// NewFirewall instantiates a Firewall ready for use with XRPL peer nodes
+func NewFirewall(banlength int) *Firewall {
+	return &Firewall{
 		whitelist: &whitelist{entries: make(map[string]xrpl.Peer, 0)},
 		blacklist: &blacklist{
 			entries:  make(map[string]*blEntry),
-			duration: time.Duration(banLength) * time.Minute,
+			duration: time.Duration(banlength) * time.Minute,
 		},
 	}
 }
 
-// Ban the peer by inserting the reject rule, add it to a blacklist so we
-// can track the expiration and re-apply on firewalld reload
-func (fw *firewall) banPeer(peer xrpl.Peer) {
+// BanPeer bans the XRPL peer by inserting the reject rule, and adds it to a
+//blacklist so we can track the expiration and re-apply on firewalld reload
+func (fw *Firewall) BanPeer(peer xrpl.Peer) {
 	reject, err := newRejectRule(peer.IP().String(), 10)
 	if err != nil {
 		log.Println(err)
@@ -198,7 +206,7 @@ func (fw *firewall) banPeer(peer xrpl.Peer) {
 }
 
 // Insert the reject rich rule
-func (fw *firewall) addReject(zone, rule string, timeout int) error {
+func (fw *Firewall) addReject(zone, rule string, timeout int) error {
 	if zone == "" {
 		zone = defZone
 	}
