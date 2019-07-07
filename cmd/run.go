@@ -25,6 +25,7 @@ import (
 	"github.com/gnanderson/xrpl"
 	"github.com/godbus/dbus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // runCmd represents the run command
@@ -53,14 +54,14 @@ func init() {
 
 func run() error {
 	ctx, cancel := context.WithCancel(context.Background())
-	n := xrpl.NewNode(nodeAddr, nodePort, useTls)
-	fw := firewall.NewFirewall(banLength)
+	n := xrpl.NewNode(viper.GetString("addr"), viper.GetString("port"), viper.GetBool("useTls"))
+	fw := firewall.NewFirewall(viper.GetInt("banlength"))
 
 	expireBlacklist(ctx, fw)
 
 	cmd := xrpl.NewPeerCommand()
-	cmd.AdminUser = "graham"
-	cmd.AdminPassword = "testnet"
+	cmd.AdminUser = viper.GetString("user")
+	cmd.AdminPassword = viper.GetString("passwd")
 
 	if err := firewall.Connect(); err != nil {
 		log.Fatal(err)
@@ -70,7 +71,7 @@ func run() error {
 	for msg := range n.RepeatCommand(
 		ctx,
 		cmd,
-		repeatCmd,
+		viper.GetInt("repeat"),
 	) {
 		if msg.Err != nil {
 			cancel()

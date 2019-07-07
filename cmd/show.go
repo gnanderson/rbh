@@ -24,6 +24,7 @@ import (
 	"github.com/gnanderson/xrpl"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -55,7 +56,7 @@ func init() {
 }
 
 func show(args []string) {
-	n := xrpl.NewNode(nodeAddr, nodePort, useTls)
+	n := xrpl.NewNode(viper.GetString("addr"), viper.GetString("port"), viper.GetBool("useTls"))
 	arg := args[0]
 	if (arg != argPeers) && (arg != argStable) && (arg != argUnstable) {
 		log.Println("invalid argument")
@@ -63,8 +64,8 @@ func show(args []string) {
 	}
 
 	cmd := xrpl.NewPeerCommand()
-	cmd.AdminUser = "graham"
-	cmd.AdminPassword = "testnet"
+	cmd.AdminUser = viper.GetString("user")
+	cmd.AdminPassword = viper.GetString("passwd")
 
 	msg := n.DoCommand(cmd)
 	if msg == nil {
@@ -116,7 +117,7 @@ func show(args []string) {
 		table.Append(line)
 
 	}
+
 	table.SetBorder(false)
 	table.Render()
-
 }

@@ -27,8 +27,8 @@ import (
 )
 
 var (
-	cfgFile, nodeAddr, nodePort string
-	useTls                      bool
+	cfgFile, nodeAddr, nodePort, adminUser, adminPassword string
+	useTls                                                bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -37,6 +37,7 @@ var rootCmd = &cobra.Command{
 	Short: "rbh gives errant XRPL (rippled) nodes \"Ye Olde Ban Hammer\"",
 }
 
+// NewCommand returns the roo cmd
 func NewCommand() *cobra.Command {
 	return rootCmd
 }
@@ -56,7 +57,14 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.rbh.yaml)")
 	rootCmd.PersistentFlags().StringVarP(&nodeAddr, "addr", "a", "127.0.0.1", "admin websocket RPC service address")
 	rootCmd.PersistentFlags().StringVarP(&nodePort, "port", "p", "6006", "admin websocket RPC service port")
+	rootCmd.PersistentFlags().StringVar(&adminUser, "user", "", "admin_user if any configured in rippled config")
+	rootCmd.PersistentFlags().StringVar(&adminPassword, "passwd", "", "admin_password if any configured in rippled config")
 	rootCmd.PersistentFlags().BoolVarP(&useTls, "tls", "t", false, "use wss scheme, ommiting this flag assumes running on localhost")
+	viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr"))
+	viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
+	viper.BindPFlag("tls", rootCmd.PersistentFlags().Lookup("tls"))
+	viper.BindPFlag("passwd", rootCmd.PersistentFlags().Lookup("passwd"))
+	viper.BindPFlag("user", rootCmd.PersistentFlags().Lookup("user"))
 }
 
 // initConfig reads in config file and ENV variables if set.

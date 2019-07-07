@@ -1,0 +1,8 @@
+---
+user: testnetadmin
+passwd: testnetpasswd
+addr: 192.168.254.10
+port: 6006
+tls: true
+banlength: 1440
+repeat: 60
