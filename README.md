@@ -13,9 +13,9 @@ This tool is inspired by Rabbit's rippled ban hammer python script:
 Many thanks to Rabit Alloy Networks and Nik Bougalis in providing valuable
 advice for operating XRPL nodes. Follow them on Twitter!
 
-  - @RabbitKickClub
-  - @alloynetworks
-  - @nbougalis
+  - [@RabbitKickClub](https://twitter.com/RabbitKickClub)
+  - [@alloynetworks](https://twitter.com/alloynetworks)
+  - [@nbougalis](https://twitter.com/nbougalis)
 
 ## Status
 
@@ -55,6 +55,8 @@ proofing by leveraging `firewalld`
 
 `firewalld` exposes it's functionality on the Kernel's D-BUS IPC layer, this is
 perfect for programatically integrating with Kernel netfiltering.
+
+  - [firewalld D-BUS](https://firewalld.org/documentation/man-pages/firewalld.dbus.html)
 
 So I endeavoured to investigate this approach and base this tool around direct
 `firewalld` integration through D-BUS.
