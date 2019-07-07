@@ -85,6 +85,7 @@ func initConfig() {
 		viper.SetConfigName(".rbh")
 	}
 
+	viper.SetEnvPrefix("RBH")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.

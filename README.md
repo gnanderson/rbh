@@ -4,6 +4,7 @@
 1. [Status](#status)
 1. [Installation](#installation)
 1. [Usage](#usage)
+1. [Configuration](#configuration)
 1. [Rational](#rational)
 
 ## Credit
@@ -23,7 +24,7 @@ advice for operating XRPL nodes. Follow them on Twitter!
 This tool is not currently fit for production use, use at your own risk.
 
 TODO:
-  - [ ] config via file and env vars
+  - [✔] config via file and env vars
   - [ ] add to CI
   - [ ] provide container/docker release
   - [ ] release management
@@ -39,6 +40,15 @@ release management is planned.
  -  `rbh help`
  -  `rbh help run`
  -  `rbh help show`
+
+## Configuration
+
+Outside of flag usage you have the following configuration strategies available.
+Keys for both config strategies correspond to the flags you can discover from
+the help commands above.
+
+ - yaml config, [example](https://github.com/gnanderson/rbh/blob/master/examples/.rbh.yaml)
+ - env vars, env var keys are prefixed with `RBH_` e.g. `RBH_ADDR`
 
 ## Rational
 
