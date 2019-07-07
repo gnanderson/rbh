@@ -23,11 +23,11 @@ advice for operating XRPL nodes. Follow them on Twitter!
 This tool is not currently fit for production use, use at your own risk.
 
 TODO:
-  [] config via file and env vars
-  [] add to CI
-  [] provide container/docker release
-  [] release management
-  [] socket closing mechanism for banned peers
+  - [ ] config via file and env vars
+  - [ ] add to CI
+  - [ ] provide container/docker release
+  - [ ] release management
+  - [ ] socket closing mechanism for banned peers
 
 ## Installation
 
@@ -36,9 +36,9 @@ release management is planned.
 
 ## Usage
 
-  `rbh help`
-  `rbh help run`
-  `rbh help show`
+ -  `rbh help`
+ -  `rbh help run`
+ -  `rbh help show`
 
 ## Rational
 
@@ -50,7 +50,7 @@ on a `firewalld` reload or modification of the zones.
 
 A lesser concern was the Kernel developers plans to move away from `iptables`
 towards using `bpfilter`. That's probably some way off but `firewalld` would
-continue to act as the frontend when this happens to there's an amount of future
+continue to act as the frontend when this happens so there's an amount of future
 proofing by leveraging `firewalld`
 
 `firewalld` exposes it's functionality on the Kernel's D-BUS IPC layer, this is
