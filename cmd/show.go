@@ -28,9 +28,10 @@ import (
 )
 
 const (
-	argPeers    = "peers"
-	argStable   = "stable"
-	argUnstable = "unstable"
+	argPeers      = "peers"
+	argStable     = "stable"
+	argUnstable   = "unstable"
+	argCandidates = "candidates"
 )
 
 // showCmd represents the show command
@@ -40,6 +41,7 @@ var showCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Long: `Valid args:
 
+  candidates: show peers matching blacklist criteria
   peers: show all connected peers
   stable: show all stable peers
   unstable show current unstable peers`,
@@ -58,7 +60,7 @@ func init() {
 func show(args []string) {
 	n := xrpl.NewNode(viper.GetString("addr"), viper.GetString("port"), viper.GetBool("useTls"))
 	arg := args[0]
-	if (arg != argPeers) && (arg != argStable) && (arg != argUnstable) {
+	if (arg != argPeers) && (arg != argStable) && (arg != argUnstable) && (arg != argCandidates) {
 		log.Println("invalid argument")
 		return
 	}
@@ -77,11 +79,13 @@ func show(args []string) {
 		log.Println(err)
 	}
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"IP", "Version", "Sanity", "Uptime", "Public Key"})
+	table.SetHeader([]string{"IP", "Version", "Status", "Uptime", "Public Key"})
 
 	var peers []*xrpl.Peer
 
 	switch arg {
+	case argCandidates:
+		fallthrough
 	case argPeers:
 		peers = pl.Peers()
 	case argStable:
@@ -95,25 +99,30 @@ func show(args []string) {
 		return
 	}
 
-	for _, peer := range peers {
-		if peer.Sanity == "" {
-			peer.Sanity = "good"
-		}
+	lineFromPeer := func(peer *xrpl.Peer) []string {
 		uptime := time.Second * time.Duration(peer.Uptime)
-		line := []string{
+		return []string{
 			peer.IP().String(),
 			peer.Version,
 			peer.Sanity,
 			uptime.String(),
 			peer.PublicKey,
 		}
-		if arg == argUnstable {
+	}
+
+	for _, peer := range peers {
+		if peer.Sanity == "" {
+			peer.Sanity = "good"
+		}
+		line := lineFromPeer(peer)
+
+		if arg == argCandidates {
 			if !peer.StableWith(xrpl.DefaultStabilityChecker) {
+				line := lineFromPeer(peer)
 				table.Append(line)
 			}
 			continue
 		}
-
 		table.Append(line)
 
 	}
