@@ -115,24 +115,24 @@ func toKnownErr(err error) error {
 	return err
 }
 
-// Notify on a channel if firewalld is reloaded by sysadmin/ops, we'll want to
+// NotifyReload on a channel if firewalld is reloaded by sysadmin/ops, we'll want to
 // know about this so we can re-apply any bans in the blacklist that have not
 // expired
-func notifyReload(notify chan<- *dbus.Signal) {
+func NotifyReload(notify chan<- *dbus.Signal) {
 	if dbusConn == nil {
-		return
+		panic("firewall not available")
 	}
 	dbusConn.BusObject().(*dbus.Object).AddMatchSignal(fwdInterface, "Reloaded")
 	dbusConn.Signal(notify)
 }
 
 type blEntry struct {
-	peer    xrpl.Peer
+	peer    *xrpl.Peer
 	expires time.Time
 }
 
 func (ble *blEntry) expired() bool {
-	return ble.expires.Sub(time.Now()) >= 0
+	return ble.expires.Sub(time.Now()) < 0
 }
 
 type blacklist struct {
@@ -140,7 +140,7 @@ type blacklist struct {
 	duration time.Duration
 }
 
-func (bl *blacklist) add(peer xrpl.Peer) {
+func (bl *blacklist) add(peer *xrpl.Peer) {
 	newEntry := &blEntry{
 		peer:    peer,
 		expires: time.Now().Add(bl.duration),
@@ -149,6 +149,13 @@ func (bl *blacklist) add(peer xrpl.Peer) {
 	if _, ok := bl.entries[peer.PublicKey]; !ok {
 		bl.entries[peer.PublicKey] = newEntry
 	}
+}
+
+func (bl *blacklist) contains(peer *xrpl.Peer) bool {
+	if _, ok := bl.entries[peer.PublicKey]; ok {
+		return true
+	}
+	return false
 }
 
 func (bl *blacklist) expireEntries() {
@@ -163,7 +170,7 @@ type whitelist struct {
 	entries map[string]xrpl.Peer
 }
 
-func (wl *whitelist) containrs(peer xrpl.Peer) bool {
+func (wl *whitelist) contains(peer *xrpl.Peer) bool {
 	if _, ok := wl.entries[peer.PublicKey]; ok {
 		return true
 	}
@@ -190,8 +197,16 @@ func NewFirewall(banlength int) *Firewall {
 
 // BanPeer bans the XRPL peer by inserting the reject rule, and adds it to a
 //blacklist so we can track the expiration and re-apply on firewalld reload
-func (fw *Firewall) BanPeer(peer xrpl.Peer) {
-	reject, err := newRejectRule(peer.IP().String(), 10)
+func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
+	if fw.blacklist.contains(peer) {
+		return
+	}
+
+	reject, err := newRejectRule(
+		peer.IP().String(),
+		int(fw.blacklist.duration.Seconds()),
+	)
+
 	if err != nil {
 		log.Println(err)
 		return
@@ -203,6 +218,37 @@ func (fw *Firewall) BanPeer(peer xrpl.Peer) {
 	}
 
 	fw.blacklist.add(peer)
+}
+
+// Expire will traverse the blacklist and remove any XRPL peers which have
+// exceeded their ban length
+func (fw *Firewall) Expire() {
+	fw.blacklist.expireEntries()
+}
+
+// RefreshBans re-applies the rich rule banning unstable peers, this is used
+// after the firewall reload notify signal.
+func (fw *Firewall) RefreshBans() {
+	fw.Expire()
+	for _, entry := range fw.blacklist.entries {
+		reject, err := newRejectRule(
+			entry.peer.IP().String(),
+			int(entry.expires.Sub(time.Now()).Seconds()),
+		)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		err = fw.addReject(
+			"public",
+			reject.String(),
+			int(fw.blacklist.duration.Seconds()),
+		)
+		if err != errAlreadyEnabled && err != nil {
+			log.Println(err)
+		}
+	}
 }
 
 // Insert the reject rich rule
