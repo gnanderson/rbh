@@ -19,7 +19,7 @@ limitations under the License.
 import (
 	"log"
 	"os"
-	"strconv"
+	"time"
 
 	"github.com/gnanderson/xrpl"
 	"github.com/olekukonko/tablewriter"
@@ -47,12 +47,15 @@ var showCmd = &cobra.Command{
 	},
 }
 
+var anonymise bool
+
 func init() {
 	rootCmd.AddCommand(showCmd)
+	showCmd.Flags().BoolVarP(&anonymise, "anonymise", "x", false, "Anonymise the peers IP for testing/ci purposes")
 }
 
 func show(args []string) {
-	n := xrpl.NewNode(nodeAddr)
+	n := xrpl.NewNode(nodeAddr, nodePort, useTls)
 	arg := args[0]
 	if (arg != argPeers) && (arg != argStable) && (arg != argUnstable) {
 		log.Println("invalid argument")
@@ -75,7 +78,7 @@ func show(args []string) {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"IP", "Version", "Sanity", "Uptime", "Public Key"})
 
-	var peers []xrpl.Peer
+	var peers []*xrpl.Peer
 
 	switch arg {
 	case argPeers:
@@ -86,15 +89,22 @@ func show(args []string) {
 		peers = pl.Unstable()
 	}
 
+	if anonymise {
+		pl.Anonymise()
+		return
+	}
+
 	for _, peer := range peers {
 		if peer.Sanity == "" {
 			peer.Sanity = "good"
 		}
+		uptime := time.Second * time.Duration(peer.Uptime)
 		line := []string{
 			peer.IP().String(),
 			peer.Version,
 			peer.Sanity,
-			strconv.Itoa(peer.Uptime), peer.PublicKey,
+			uptime.String(),
+			peer.PublicKey,
 		}
 		if arg == argUnstable {
 			if !peer.StableWith(xrpl.DefaultStabilityChecker) {

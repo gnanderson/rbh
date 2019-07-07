@@ -19,9 +19,11 @@ limitations under the License.
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/gnanderson/rbh/firewall"
 	"github.com/gnanderson/xrpl"
+	"github.com/godbus/dbus"
 	"github.com/spf13/cobra"
 )
 
@@ -39,33 +41,37 @@ whether to swing the ban hammer.`,
 }
 
 var (
-	printTable bool
-	banLength  int
+	printTable           bool
+	banLength, repeatCmd int
 )
 
 func init() {
 	rootCmd.AddCommand(runCmd)
 	runCmd.Flags().IntVarP(&banLength, "banlength", "b", 1440, "the duration of the ban (in minutes) for unstable peers")
+	runCmd.Flags().IntVarP(&repeatCmd, "repeat", "r", 60, "check for new peers to ban after 'repeat' seconds")
 }
 
 func run() error {
 	ctx, cancel := context.WithCancel(context.Background())
-	n := xrpl.NewNode(nodeAddr)
+	n := xrpl.NewNode(nodeAddr, nodePort, useTls)
 	fw := firewall.NewFirewall(banLength)
+
+	expireBlacklist(ctx, fw)
 
 	cmd := xrpl.NewPeerCommand()
 	cmd.AdminUser = "graham"
 	cmd.AdminPassword = "testnet"
 
+	if err := firewall.Connect(); err != nil {
+		log.Fatal(err)
+	}
+	refreshBans(ctx, fw)
+
 	for msg := range n.RepeatCommand(
 		ctx,
 		cmd,
-		10,
+		repeatCmd,
 	) {
-		if err := firewall.Connect(); err != nil {
-			log.Println(err)
-		}
-
 		if msg.Err != nil {
 			cancel()
 			return msg.Err
@@ -90,4 +96,38 @@ func run() error {
 	cancel()
 
 	return nil
+}
+
+func refreshBans(ctx context.Context, fwl *firewall.Firewall) {
+	notify := make(chan *dbus.Signal)
+	firewall.NotifyReload(notify)
+
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-notify:
+				log.Println("firewalld reloaded")
+				fwl.RefreshBans()
+			}
+		}
+	}()
+}
+
+func expireBlacklist(ctx context.Context, firewall *firewall.Firewall) {
+	ticker := time.NewTicker(time.Second * 60)
+
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				ticker.Stop()
+				return
+			case <-ticker.C:
+				log.Println("flushing expires entries")
+				firewall.Expire()
+			}
+		}
+	}()
 }
