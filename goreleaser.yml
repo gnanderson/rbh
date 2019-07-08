@@ -1,0 +1,72 @@
+# goreleaser.yml
+project_name: rbh
+
+release:
+  # If set to true, will not auto-publish the release.
+  # Default is false
+  draft: true
+
+builds:
+  -
+    # Path to main.go file or main package.
+    # Default is `.`
+    main: .
+
+    # Name of the binary.
+    # Default is the name of the project directory.
+    binary: rbh
+
+    # Custom build tags.
+    # Default is empty
+    flags: -tags dev
+
+    # Custom ldflags template.
+    # This is parsed with Golang template engine and the following variables
+    # are available:
+    # - Date
+    # - Commit
+    # - Tag
+    # - Version (Tag with the `v` prefix stripped)
+    # The default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}`
+    # Date format is `2006-01-02_15:04:05`
+    ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+    # Custom environment variables to be set durign the builds.
+    # Default is empty
+    env:
+      - CGO_ENABLED=0
+
+    # GOOS list to build in.
+    # For more info refer to https://golang.org/doc/install/source#environment
+    # Defaults are darwin and linux
+    goos:
+      - linux
+
+    # GOARCH to build in.
+    # For more info refer to https://golang.org/doc/install/source#environment
+    # Defaults are 386 and amd64
+    goarch:
+      - amd64
+      - arm
+      - arm64
+
+    goarm:
+      - 6
+      - 7
+
+    # List of combinations of GOOS + GOARCH + GOARM to ignore.
+    # Default is empty.
+    ignore:
+
+    # Hooks can be used to customize the final binary, for example, to run
+    # generator or whatever you want.
+    # Default is both hooks empty.
+    hooks:
+
+sign:
+   artifacts: none
+
+# Archive customization
+archives:
+  - id: rbh
+    format: gz
