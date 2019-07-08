@@ -3,7 +3,7 @@ module github.com/gnanderson/rbh
 go 1.13
 
 require (
-	github.com/gnanderson/xrpl v0.0.0-20190707154120-813420a676a5
+	github.com/gnanderson/xrpl v0.0.1
 	github.com/godbus/dbus v5.0.1+incompatible
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
