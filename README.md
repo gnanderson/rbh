@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/github/release/goreleaser/goreleaser.svg?style=for-the-badge)](https://github.com/gnanderson/rbh/releases/latest)
+[![Release](https://img.shields.io/github/gnanderson/rbh/rbh.svg?style=for-the-badge)](https://github.com/gnanderson/rbh/releases/latest)
 [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=for-the-badge)](http://godoc.org/github.com/gnanderson/rbh)
 
 # rbh - rippled ban hammer
