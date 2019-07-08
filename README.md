@@ -1,7 +1,10 @@
 # rbh - rippled ban hammer
 
+Follow me on Twitter - [@diakritikal](https://twitter.com/diakritikal)
+
 1. [Credit](#credit)
 1. [Status](#status)
+1. [Requirements](#requirements)
 1. [Installation](#installation)
 1. [Usage](#usage)
 1. [Configuration](#configuration)
@@ -11,7 +14,7 @@
 This tool is inspired by Rabbit's rippled ban hammer python script:
   https://github.com/crypticrabbit/rippled-ban-hammer
 
-Many thanks to Rabit Alloy Networks and Nik Bougalis in providing valuable
+Many thanks to Rabbit, Alloy Networks and Nik Bougalis in providing valuable
 advice for operating XRPL nodes. Follow them on Twitter!
 
   - [@RabbitKickClub](https://twitter.com/RabbitKickClub)
@@ -24,11 +27,38 @@ advice for operating XRPL nodes. Follow them on Twitter!
 This tool is not currently fit for production use, use at your own risk.
 
 TODO:
+  - [ ] whitelist support
   - [✔] config via file and env vars
   - [ ] add to CI
   - [ ] provide container/docker release
-  - [ ] release management
+  - [✔] release management
   - [ ] socket closing mechanism for banned peers
+
+## Requirements
+
+### Ban Functionality
+
+The ban functionality is built on [firewalld](https://firewalld.org/). It is
+unlikely systems without `firewalld` will be supported. This is purely because
+as far as I'm aware the alternatives e.g. Ubuntu `ufw` don't have any convenient
+communication layer (D-BUS) exposed to program against. You can of course
+configure your Debian/Ubuntu system to use `firewalld`. There are official
+packages available.
+
+Off the top of my head I think this should work on the following Linux flavours.
+
+  - SLES 15+
+  - RHEL 7+
+  - CentOS 7+
+  - OpenSUSE Leap
+  - Fedora Core 21+ - I hope you have upgraded ;)
+  - Arch
+
+## Socket Closing Functionality
+
+To be developed/discussed - `ss -K [filter]` will probably be the first method
+supported with `tcpkill` *maybe* added later. This functionality will likely need
+Kernel 4.9+ and compiled with `CONFIG_INET_DIAG_DESTROY`.
 
 ## Installation
 
@@ -70,5 +100,3 @@ perfect for programatically integrating with Kernel netfiltering.
 
 So I endeavoured to investigate this approach and base this tool around direct
 `firewalld` integration through D-BUS.
-
-
