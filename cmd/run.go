@@ -49,18 +49,20 @@ whether to swing the ban hammer.`,
 var (
 	printTable           bool
 	banLength, repeatCmd int
+	whitelist            string
 )
 
 func init() {
 	rootCmd.AddCommand(runCmd)
 	runCmd.Flags().IntVarP(&banLength, "banlength", "b", 1440, "the duration of the ban (in minutes) for unstable peers")
 	runCmd.Flags().IntVarP(&repeatCmd, "repeat", "r", 60, "check for new peers to ban after 'repeat' seconds")
+	runCmd.Flags().StringVarP(&whitelist, "whitelist", "w", "", "Space separated list of IP's which will not be considered as candidates for the ban hammer")
 }
 
 func run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	n := xrpl.NewNode(viper.GetString("addr"), viper.GetString("port"), viper.GetBool("useTls"))
-	fw := firewall.NewFirewall(viper.GetInt("banlength"))
+	fw := firewall.NewFirewall(viper.GetInt("banlength"), viper.GetStringSlice("whitelist")...)
 
 	expireBlacklist(ctx, fw)
 

@@ -6,3 +6,7 @@ port: 6006
 tls: true
 banlength: 1440
 repeat: 60
+whitelist:
+  - 10.0.0.10
+  - 10.0.0.20
+  - 10.0.0.30

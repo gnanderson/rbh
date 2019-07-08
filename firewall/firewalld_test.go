@@ -51,3 +51,23 @@ func TestBlackListExpire(t *testing.T) {
 		t.Fatalf("unexpected number of blacklist entries '%d'", len(bl.entries))
 	}
 }
+
+var wlTests = []struct {
+	ip string
+}{
+	{"192.168.1.10"},
+	{"10.0.0.20"},
+	{"192.168.1.30"},
+}
+
+func TestWhitelistedPeerIgnored(t *testing.T) {
+	fw := NewFirewall(10, "10.0.0.10", "10.0.0.20", "10.0.0.30")
+
+	for _, tt := range wlTests {
+		fw.BanPeer(&xrpl.Peer{Address: tt.ip + ":1234", PublicKey: "x"})
+	}
+
+	if len(fw.blacklist.entries) > 2 || len(fw.blacklist.entries) == 0 {
+		t.Fatalf("unexpected number of blacklist entries '%d'", len(fw.blacklist.entries))
+	}
+}

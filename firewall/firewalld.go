@@ -180,11 +180,19 @@ func (bl *blacklist) expireEntries() {
 }
 
 type whitelist struct {
-	entries map[string]xrpl.Peer
+	entries map[string]*xrpl.Peer
+}
+
+func (wl *whitelist) add(ip string) {
+	if _, ok := wl.entries[ip]; !ok {
+		wl.entries[ip] = nil
+	}
 }
 
 func (wl *whitelist) contains(peer *xrpl.Peer) bool {
-	if _, ok := wl.entries[peer.PublicKey]; ok {
+	if _, ok := wl.entries[peer.IP().String()]; ok {
+		// always update the peer data with current known state
+		wl.entries[peer.IP().String()] = peer
 		return true
 	}
 	return false
@@ -198,20 +206,29 @@ type Firewall struct {
 }
 
 // NewFirewall instantiates a Firewall ready for use with XRPL peer nodes
-func NewFirewall(banlength int) *Firewall {
-	return &Firewall{
-		whitelist: &whitelist{entries: make(map[string]xrpl.Peer, 0)},
+func NewFirewall(banLength int, whiteList ...string) *Firewall {
+	fw := &Firewall{
+		whitelist: &whitelist{entries: make(map[string]*xrpl.Peer)},
 		blacklist: &blacklist{
 			entries:  make(map[string]*blEntry),
-			duration: time.Duration(banlength) * time.Minute,
+			duration: time.Duration(banLength) * time.Minute,
 		},
 	}
+
+	if whiteList != nil {
+		for _, entry := range whiteList {
+			fw.whitelist.add(entry)
+		}
+	}
+
+	return fw
 }
 
 // BanPeer bans the XRPL peer by inserting the reject rule, and adds it to a
-//blacklist so we can track the expiration and re-apply on firewalld reload
+// blacklist so we can track the expiration and re-apply on firewalld reload.
+// IP's that are in the whitelist are ignored...
 func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
-	if fw.blacklist.contains(peer) {
+	if fw.whitelist.contains(peer) || fw.blacklist.contains(peer) {
 		return
 	}
 
