@@ -67,6 +67,7 @@ sign:
    artifacts: none
 
 # Archive customization
-archives:
-  - id: rbh
-    format: gz
+archive:
+  format: gz
+  files:
+  - none*
