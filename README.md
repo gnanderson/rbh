@@ -32,7 +32,7 @@ TODO:
   - [✔] race check data structures accessed concurrently
   - [ ] whitelist support
   - [✔] config via file and env vars
-  - [ ] add to CI
+  - [✔] add to CI
   - [ ] provide container/docker release
   - [✔] release management
   - [ ] socket closing mechanism for banned peers
