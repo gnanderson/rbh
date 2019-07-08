@@ -1,4 +1,5 @@
 [![CircleCI](https://circleci.com/gh/gnanderson/rbh.svg?style=shield)](https://circleci.com/gh/gnanderson/rbh)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gnanderson/rbh)](https://goreportcard.com/report/github.com/gnanderson/rbh)
 
 # rbh - rippled ban hammer
 
