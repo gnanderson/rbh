@@ -66,8 +66,9 @@ Kernel 4.9+ and compiled with `CONFIG_INET_DIAG_DESTROY`.
 
 ## Installation
 
-Currently you'll need to install with `go get github.com/gnanderson/rbh`. Better
-release management is planned.
+There are some [binaries](https://github.com/gnanderson/rbh/releases/latest) for Linux, these should be considered alpha status
+
+Alternatively you can install with `go get github.com/gnanderson/rbh`.
 
 ## Usage
 
