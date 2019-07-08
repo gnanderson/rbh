@@ -28,7 +28,7 @@ This tool is not currently fit for production use, use at your own risk.
 
 TODO:
   - [✔] race check data structures accessed concurrently
-  - [ ] whitelist support
+  - [✔] whitelist support
   - [✔] config via file and env vars
   - [ ] add to CI
   - [ ] provide container/docker release

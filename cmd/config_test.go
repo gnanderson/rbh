@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"reflect"
 	"testing"
 
@@ -60,5 +61,38 @@ func TestExampleConfig(t *testing.T) {
 				tf(tt.key, boolResult, tt.val)
 			}
 		})
+	}
+}
+
+var whitelistTests = []struct {
+	ip string
+}{
+	{"10.0.0.10"},
+	{"10.0.0.20"},
+	{"10.0.0.30"},
+}
+
+func TestWhitelistFromConfig(t *testing.T) {
+	cfgFile = "../examples/.rbh.yaml"
+	initConfig()
+	list := viper.GetStringSlice("whitelist")
+
+	for i, tt := range whitelistTests {
+		if list[i] != tt.ip {
+			t.Errorf("expecting IP %s, got %s", tt.ip, list[i])
+		}
+	}
+}
+
+func TestWhitelistFromEnv(t *testing.T) {
+	cfgFile = "/not-exist"
+	os.Setenv("RBH_WHITELIST", "10.0.0.10 10.0.0.20 10.0.0.30")
+	initConfig()
+	list := viper.GetStringSlice("whitelist")
+
+	for i, tt := range whitelistTests {
+		if list[i] != tt.ip {
+			t.Errorf("expecting IP %s, got %s", tt.ip, list[i])
+		}
 	}
 }
