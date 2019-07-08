@@ -1,5 +1,4 @@
-[![Release](https://img.shields.io/github/gnanderson/rbh/rbh.svg?style=for-the-badge)](https://github.com/gnanderson/rbh/releases/latest)
-[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=for-the-badge)](http://godoc.org/github.com/gnanderson/rbh)
+[![CircleCI](https://circleci.com/gh/gnanderson/rbh.svg?style=shield)](https://circleci.com/gh/gnanderson/rbh)
 
 # rbh - rippled ban hammer
 
