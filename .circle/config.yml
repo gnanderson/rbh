@@ -1,0 +1,13 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
+      - image: golang:1.13beta1
+
+    working_directory: /go/src/github.com/gnanderson/rbh
+
+    steps:
+      - checkout
+      - run: cd /go/src/github.com/gnanderson/rbh && go test ./...
