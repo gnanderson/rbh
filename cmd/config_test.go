@@ -28,6 +28,8 @@ var cfgTests = []struct {
 	{"tls", true, getBool},
 	{"banlength", 1440, getInt},
 	{"repeat", 60, getInt},
+	{"docker", "rippled", getString},
+	{"tcpkill", false, getBool},
 }
 
 // well this is a little verbose but I don't want to break the example config

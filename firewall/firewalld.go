@@ -201,14 +201,16 @@ func (wl *whitelist) contains(peer *xrpl.Peer) bool {
 // Firewall is a wrapper round `firewalld` that provides functionality for
 // temporarily banning XRPL peer nodes
 type Firewall struct {
-	whitelist *whitelist
-	blacklist *blacklist
+	Disconnector Disconnector
+	whitelist    *whitelist
+	blacklist    *blacklist
 }
 
 // NewFirewall instantiates a Firewall ready for use with XRPL peer nodes
 func NewFirewall(banLength int, whiteList ...string) *Firewall {
 	fw := &Firewall{
-		whitelist: &whitelist{entries: make(map[string]*xrpl.Peer)},
+		Disconnector: DefaultDisconnector,
+		whitelist:    &whitelist{entries: make(map[string]*xrpl.Peer)},
 		blacklist: &blacklist{
 			entries:  make(map[string]*blEntry),
 			duration: time.Duration(banLength) * time.Minute,
@@ -229,6 +231,7 @@ func NewFirewall(banLength int, whiteList ...string) *Firewall {
 // IP's that are in the whitelist are ignored...
 func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
 	if fw.whitelist.contains(peer) || fw.blacklist.contains(peer) {
+		log.Printf("firewalld: peer already in blaclist %s", peer.IP().String())
 		return
 	}
 
@@ -248,6 +251,8 @@ func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
 	}
 
 	fw.blacklist.add(peer)
+
+	fw.Disconnect(peer)
 }
 
 // Expire will traverse the blacklist and remove any XRPL peers which have
@@ -278,6 +283,13 @@ func (fw *Firewall) RefreshBans() {
 		if err != errAlreadyEnabled && err != nil {
 			log.Println(err)
 		}
+	}
+}
+
+// Disconnect a peer socket
+func (fw *Firewall) Disconnect(peer *xrpl.Peer) {
+	if err := fw.Disconnector.Disconnect(peer); err != nil {
+		log.Println("firewall disconnect:", err)
 	}
 }
 
