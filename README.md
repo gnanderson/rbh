@@ -27,12 +27,14 @@ advice for operating XRPL nodes. Follow them on Twitter!
 This tool is not currently fit for production use, use at your own risk.
 
 TODO:
+  - [✔] race check data structures accessed concurrently
   - [ ] whitelist support
   - [✔] config via file and env vars
   - [ ] add to CI
   - [ ] provide container/docker release
   - [✔] release management
   - [ ] socket closing mechanism for banned peers
+  - [ ] correclty support ipv6
 
 ## Requirements
 

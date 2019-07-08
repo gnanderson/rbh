@@ -23,6 +23,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gnanderson/xrpl"
@@ -79,6 +80,7 @@ func (rr *rejectRule) String() string {
 // therefor understand if firewalld is up
 func Connect() (err error) {
 	if dbusConn, err = dbus.SystemBus(); err != nil {
+		log.Println("dbus:", err)
 		fwdUp = false
 		return err
 	}
@@ -86,6 +88,7 @@ func Connect() (err error) {
 	dbusObj = dbusConn.Object(fwdInterface, dbus.ObjectPath(fwdObjPath))
 
 	if err = dbusObj.Call(fwdInterface+".getDefaultZone", 0).Store(&defZone); err != nil {
+		log.Println("firewalld: cannot retrieve zone, check user permission or firewalld status", err)
 		dbusConn.Close()
 		return err
 	}
@@ -136,11 +139,15 @@ func (ble *blEntry) expired() bool {
 }
 
 type blacklist struct {
+	sync.Mutex
 	entries  map[string]*blEntry
 	duration time.Duration
 }
 
 func (bl *blacklist) add(peer *xrpl.Peer) {
+	bl.Lock()
+	defer bl.Unlock()
+
 	newEntry := &blEntry{
 		peer:    peer,
 		expires: time.Now().Add(bl.duration),
@@ -152,6 +159,9 @@ func (bl *blacklist) add(peer *xrpl.Peer) {
 }
 
 func (bl *blacklist) contains(peer *xrpl.Peer) bool {
+	bl.Lock()
+	defer bl.Unlock()
+
 	if _, ok := bl.entries[peer.PublicKey]; ok {
 		return true
 	}
@@ -159,6 +169,9 @@ func (bl *blacklist) contains(peer *xrpl.Peer) bool {
 }
 
 func (bl *blacklist) expireEntries() {
+	bl.Lock()
+	defer bl.Unlock()
+
 	for _, entry := range bl.entries {
 		if entry.expired() {
 			delete(bl.entries, entry.peer.PublicKey)

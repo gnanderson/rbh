@@ -37,7 +37,12 @@ var runCmd = &cobra.Command{
 Periodically this service will query the XRPL node for a list of peers and decide
 whether to swing the ban hammer.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Fatal(run())
+		var err error
+		if err := run(); err == nil {
+			panic("exit with nill error unexpected")
+		}
+
+		log.Fatal("Exiting...", err)
 	},
 }
 
@@ -64,7 +69,7 @@ func run() error {
 	cmd.AdminPassword = viper.GetString("passwd")
 
 	if err := firewall.Connect(); err != nil {
-		log.Fatal(err)
+		log.Fatal("Exiting...", err)
 	}
 	refreshBans(ctx, fw)
 
@@ -126,7 +131,7 @@ func expireBlacklist(ctx context.Context, firewall *firewall.Firewall) {
 				ticker.Stop()
 				return
 			case <-ticker.C:
-				log.Println("flushing expires entries")
+				log.Println("flushing expired entries")
 				firewall.Expire()
 			}
 		}
