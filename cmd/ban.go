@@ -66,7 +66,7 @@ func ban(args []string) {
 	cmd.AdminPassword = viper.GetString("passwd")
 
 	if err := firewall.Connect(); err != nil {
-		log.Fatal("Exiting...", err)
+		log.Fatal("firewall ban:", err)
 	}
 
 	msg := n.DoCommand(cmd)

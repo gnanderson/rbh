@@ -17,14 +17,18 @@ limitations under the License.
 */
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gnanderson/xrpl"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	. "github.com/logrusorgru/aurora"
 )
 
 const (
@@ -79,7 +83,7 @@ func show(args []string) {
 		log.Fatal(err)
 	}
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"IP", "Version", "Status", "Uptime", "Public Key"})
+	table.SetHeader([]string{"IP", "Status", "Version", "Uptime", "Public Key"})
 
 	var peers []*xrpl.Peer
 
@@ -101,10 +105,20 @@ func show(args []string) {
 
 	lineFromPeer := func(peer *xrpl.Peer) []string {
 		uptime := time.Second * time.Duration(peer.Uptime)
+		switch peer.Sanity {
+		case "insane":
+			peer.Sanity = fmt.Sprintf("%s", Red(peer.Sanity))
+		case "unknown":
+			peer.Sanity = fmt.Sprintf("%s", Yellow(peer.Sanity))
+		case "good":
+			peer.Sanity = fmt.Sprintf("%s", Green(peer.Sanity))
+		case "old":
+			peer.Sanity = fmt.Sprintf("%s", Cyan(peer.Sanity))
+		}
 		return []string{
 			peer.IP().String(),
-			peer.Version,
 			peer.Sanity,
+			peer.Version,
 			uptime.String(),
 			peer.PublicKey,
 		}
@@ -113,6 +127,9 @@ func show(args []string) {
 	for _, peer := range peers {
 		if peer.Sanity == "" {
 			peer.Sanity = "good"
+		}
+		if peer.IsOld() {
+			peer.Sanity = "old"
 		}
 		line := lineFromPeer(peer)
 
@@ -127,6 +144,7 @@ func show(args []string) {
 
 	}
 
+	table.SetFooter([]string{"PEER COUNT", strconv.Itoa(table.NumLines()), "", "", ""})
 	table.SetBorder(false)
 	table.Render()
 }
