@@ -98,7 +98,7 @@ func run() error {
 			return err
 		}
 
-		for _, peer := range pl.Unstable() {
+		for _, peer := range pl.Peers() {
 			if !peer.StableWith(xrpl.DefaultStabilityChecker) {
 				if firewall.Up() {
 					fw.BanPeer(peer)
