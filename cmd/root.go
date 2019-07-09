@@ -59,7 +59,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&nodePort, "port", "p", "6006", "admin websocket RPC service port")
 	rootCmd.PersistentFlags().StringVar(&adminUser, "user", "", "admin_user if any configured in rippled config")
 	rootCmd.PersistentFlags().StringVar(&adminPassword, "passwd", "", "admin_password if any configured in rippled config")
-	rootCmd.PersistentFlags().BoolVarP(&useTls, "tls", "t", false, "use wss scheme, ommiting this flag assumes running on localhost")
+	rootCmd.PersistentFlags().BoolVarP(&useTls, "tls", "t", false, "use wss scheme, omitting this flag assumes running on localhost")
 	viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr"))
 	viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
 	viper.BindPFlag("user", rootCmd.PersistentFlags().Lookup("user"))

@@ -58,7 +58,7 @@ type rejectRule struct {
 
 // This is a simple reject rich rule definition based on the source ip. The
 // rule when printed in it's string format is not permanent because it is
-// intented to be used with the firewalld rich rule timeout option.
+// intended to be used with the firewalld rich rule timeout option.
 func newRejectRule(ip string, timeout int) (*rejectRule, error) {
 	IP := net.ParseIP(ip)
 	if IP == nil {
@@ -76,7 +76,7 @@ func (rr *rejectRule) String() string {
 	)
 }
 
-// Connect queries DBUS to see if we can retreive the firewalld default zone and
+// Connect queries DBUS to see if we can retrieve the firewalld default zone and
 // therefor understand if firewalld is up
 func Connect() (err error) {
 	if dbusConn, err = dbus.SystemBus(); err != nil {

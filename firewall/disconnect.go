@@ -94,22 +94,22 @@ func (ssd *SSDisconnector) Disconnect(peer *xrpl.Peer) error {
 // TCPKillDisconnector requires the `tcpkill` utility to be available on the
 // system. This utility is more of a brute force approach and may not work
 // consitently - especially on nodes with many open connections and very high
-// trafic volume.
+// traffic volume.
 //
 // `tcpkill` tries to close the connection by sniffing for the IP's traffic
-// and then agressively trying to inject a RST packet into the TCP stack
+// and then aggressively trying to inject a RST packet into the TCP stack
 // receive window. For this reason it may not be successful, but you can try
-// more agressive levels than the default (3), levels are 1-9.
+// more aggressive levels than the default (3), levels are 1-9.
 type TCPKillDisconnector struct {
-	Agression int
-	iface     string
-	Docker    bool
-	Container string
+	Aggression int
+	iface      string
+	Docker     bool
+	Container  string
 }
 
 // NewTCPKIllDisconnector returns a Disconnector configured to use `tcpkill`
 func NewTCPKIllDisconnector(container string) *TCPKillDisconnector {
-	return &TCPKillDisconnector{Agression: 3, Docker: container != "", Container: container}
+	return &TCPKillDisconnector{Aggression: 3, Docker: container != "", Container: container}
 }
 
 // Disconnect will try to close the peer's socket
