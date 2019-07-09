@@ -117,7 +117,7 @@ func (tcp *TCPKillDisconnector) Disconnect(peer *xrpl.Peer) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	var out bytes.Buffer
 	var cmdStr = "tcpkill"
-	var args = []string{"-i", tcp.iface, strconv.Itoa(tcp.Agression)}
+	var args = []string{"-i", tcp.iface, strconv.Itoa(tcp.Aggression)}
 
 	if tcp.Docker {
 		cmdStr = "docker"
