@@ -83,7 +83,7 @@ func show(args []string) {
 		log.Fatal(err)
 	}
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"IP", "Status", "Version", "Uptime", "Public Key"})
+	table.SetHeader([]string{"IP", "Status", "Version", "Uptime", "Latency", "Load", "Public Key"})
 
 	var peers []*xrpl.Peer
 
@@ -120,6 +120,8 @@ func show(args []string) {
 			peer.Sanity,
 			peer.Version,
 			uptime.String(),
+			strconv.Itoa(peer.Latency),
+			strconv.Itoa(peer.Load),
 			peer.PublicKey,
 		}
 	}
@@ -144,7 +146,8 @@ func show(args []string) {
 
 	}
 
-	table.SetFooter([]string{"PEER COUNT", strconv.Itoa(table.NumLines()), "", "", ""})
+	table.SetFooter([]string{"PEER COUNT", strconv.Itoa(table.NumLines()), "", "", "", "", ""})
 	table.SetBorder(false)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.Render()
 }
