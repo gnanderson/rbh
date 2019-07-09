@@ -12,9 +12,10 @@ rbh gives errant XRPL (rippled) nodes "Ye Olde Ban Hammer"
   -a, --addr string     admin websocket RPC service address (default "127.0.0.1")
   -c, --config string   config file (default is $HOME/.rbh.yaml)
   -h, --help            help for rbh
+  -m, --minver string   Minimum version number acceptable to avoid the ban hammer. (default "1.2.3")
       --passwd string   admin_password if any configured in rippled config
   -p, --port string     admin websocket RPC service port (default "6006")
-  -t, --tls             use wss scheme, ommiting this flag assumes running on localhost
+  -t, --tls             use wss scheme, omitting this flag assumes running on localhost
       --user string     admin_user if any configured in rippled config
 ```
 
