@@ -7,6 +7,7 @@ tls: true
 banlength: 1440
 repeat: 60
 docker: rippled
+minver: 1.2.3
 whitelist:
   - 10.0.0.10
   - 10.0.0.20
