@@ -36,7 +36,7 @@ TODO:
   - [✔] add to CI
   - [ ] provide container/docker release
   - [✔] release management
-  - [ ] socket closing mechanism for banned peers
+  - [✔] socket closing mechanism for banned peers
   - [ ] correclty support ipv6
 
 ## Requirements
@@ -61,9 +61,14 @@ Off the top of my head I think this should work on the following Linux flavours.
 
 ## Socket Closing Functionality
 
-To be developed/discussed - `ss -K [filter]` will probably be the first method
-supported with `tcpkill` *maybe* added later. This functionality will likely need
-Kernel 4.9+ and compiled with `CONFIG_INET_DIAG_DESTROY`.
+An initial implementation of closing sockets via system utilities has been added.
+The default Disconnector uses iproute2 utility `ss`. Please see the [code comments about
+this](https://github.com/gnanderson/rbh/blob/master/firewall/disconnect.go#L38).
+
+If your kernel doesn't support it, you can try the `tcpkill` option by passing the `-k`
+flag.
+
+Testing has been only cursory on this functionality... Ping me if you see any problems.
 
 ## Installation
 
