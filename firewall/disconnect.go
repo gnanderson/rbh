@@ -1,18 +1,5 @@
 package firewall
 
-import (
-	"bytes"
-	"context"
-	"fmt"
-	"log"
-	"os/exec"
-	"strconv"
-	"strings"
-	"time"
-
-	"github.com/gnanderson/xrpl"
-)
-
 /*
 Copyright © 2019 Graham Anderson <graham@grahamanderson.scot>
 
@@ -28,6 +15,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+import (
+	"bytes"
+	"context"
+	"fmt"
+	"log"
+	"os/exec"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/gnanderson/xrpl"
+)
 
 // Disconnector is an interface accepted by the firewall to disconnect a peers
 // socket after banning it

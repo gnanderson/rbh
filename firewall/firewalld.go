@@ -234,11 +234,6 @@ func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
 		return
 	}
 
-	if fw.blacklist.contains(peer) {
-		log.Printf("firewalld: peer already in blacklist %s - disconnecting", peer.IP().String())
-		fw.Disconnect(peer)
-	}
-
 	reject, err := newRejectRule(
 		peer.IP().String(),
 		int(fw.blacklist.duration.Seconds()),
