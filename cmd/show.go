@@ -23,6 +23,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/coreos/go-semver/semver"
 	"github.com/gnanderson/xrpl"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -72,6 +73,7 @@ func show(args []string) {
 	cmd := xrpl.NewPeerCommand()
 	cmd.AdminUser = viper.GetString("user")
 	cmd.AdminPassword = viper.GetString("passwd")
+	xrpl.MinVersion = semver.Must(semver.NewVersion(minVersion))
 
 	msg := n.DoCommand(cmd)
 	if msg == nil {
@@ -82,8 +84,6 @@ func show(args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"IP", "Status", "Version", "Uptime", "Latency", "Load", "Public Key"})
 
 	var peers []*xrpl.Peer
 
@@ -106,13 +106,13 @@ func show(args []string) {
 	lineFromPeer := func(peer *xrpl.Peer) []string {
 		uptime := time.Second * time.Duration(peer.Uptime)
 		switch peer.Sanity {
-		case "insane":
+		case xrpl.Insane:
 			peer.Sanity = fmt.Sprintf("%s", Red(peer.Sanity))
-		case "unknown":
+		case xrpl.Unstable:
 			peer.Sanity = fmt.Sprintf("%s", Yellow(peer.Sanity))
-		case "good":
+		case xrpl.Good:
 			peer.Sanity = fmt.Sprintf("%s", Green(peer.Sanity))
-		case "old":
+		case xrpl.Old:
 			peer.Sanity = fmt.Sprintf("%s", Cyan(peer.Sanity))
 		}
 		return []string{
@@ -126,12 +126,15 @@ func show(args []string) {
 		}
 	}
 
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"IP", "Status", "Version", "Uptime", "Latency", "Load", "Public Key"})
+
 	for _, peer := range peers {
 		if peer.Sanity == "" {
-			peer.Sanity = "good"
+			peer.Sanity = xrpl.Good
 		}
-		if peer.IsOld() {
-			peer.Sanity = "old"
+		if peer.TooOld() {
+			peer.Sanity = xrpl.Old
 		}
 		line := lineFromPeer(peer)
 

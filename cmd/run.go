@@ -21,6 +21,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/coreos/go-semver/semver"
 	"github.com/gnanderson/rbh/firewall"
 	"github.com/gnanderson/xrpl"
 	"github.com/godbus/dbus"
@@ -59,13 +60,12 @@ func init() {
 
 func run() error {
 	ctx, cancel := context.WithCancel(context.Background())
+
 	n := xrpl.NewNode(viper.GetString("addr"), viper.GetString("port"), viper.GetBool("useTls"))
 	fw := firewall.NewFirewall(viper.GetInt("banlength"), viper.GetStringSlice("whitelist")...)
-
 	if viper.GetString("docker") != "" {
 		fw.Disconnector = firewall.NewSSDisconnector(viper.GetString("docker"))
 	}
-
 	if viper.GetBool("tcpkill") {
 		fw.Disconnector = firewall.NewTCPKIllDisconnector(viper.GetString("docker"))
 	}
@@ -75,6 +75,7 @@ func run() error {
 	cmd := xrpl.NewPeerCommand()
 	cmd.AdminUser = viper.GetString("user")
 	cmd.AdminPassword = viper.GetString("passwd")
+	xrpl.MinVersion = semver.Must(semver.NewVersion(minVersion))
 
 	if err := firewall.Connect(); err != nil {
 		log.Fatal("run: firewall error:", err)

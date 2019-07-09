@@ -3,6 +3,7 @@ module github.com/gnanderson/rbh
 go 1.13
 
 require (
+	github.com/coreos/go-semver v0.3.0
 	github.com/gnanderson/xrpl v0.0.5
 	github.com/godbus/dbus v5.0.1+incompatible
 	github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946
@@ -12,3 +13,5 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.4.0
 )
+
+// replace github.com/gnanderson/xrpl => ../xrpl
