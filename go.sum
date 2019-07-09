@@ -34,6 +34,10 @@ github.com/gnanderson/xrpl v0.0.1 h1:6t7//i3iOHsI0g9yZ/vkEsAr+icVt7P+KedGS7nF/LM
 github.com/gnanderson/xrpl v0.0.1/go.mod h1:joaCgLQGV7m5yJMFRcMeVdFfjHOxDxnpgGUwShr5VfE=
 github.com/gnanderson/xrpl v0.0.3 h1:FTJVF3qyYagqH+xX0b4D8QRtp+2RoISvbM4zv9MioEA=
 github.com/gnanderson/xrpl v0.0.3/go.mod h1:joaCgLQGV7m5yJMFRcMeVdFfjHOxDxnpgGUwShr5VfE=
+github.com/gnanderson/xrpl v0.0.4 h1:qt9ERuSQp9sslgBvNgzjgzeCwcUAXczbyiu4HZNPTVo=
+github.com/gnanderson/xrpl v0.0.4/go.mod h1:joaCgLQGV7m5yJMFRcMeVdFfjHOxDxnpgGUwShr5VfE=
+github.com/gnanderson/xrpl v0.0.5 h1:AyzZt4BaYFmTx7Jza1fE83PYjLFsRqpCq/CfNK/hjXM=
+github.com/gnanderson/xrpl v0.0.5/go.mod h1:joaCgLQGV7m5yJMFRcMeVdFfjHOxDxnpgGUwShr5VfE=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
@@ -70,6 +74,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946 h1:z+WaKrgu3kCpcdnbK9YG+JThpOCd1nU5jO5ToVmSlR4=
+github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946/go.mod h1:7rIyQOR62GCctdiQpZ/zOJlFyk6y+94wXzv6RNZgaR4=
 github.com/magiconair/properties v1.8.0 h1:LLgXmsheXeRoUOBOjtwPQCWIYqM/LU1ayDtDePerRcY=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
 github.com/mattn/go-runewidth v0.0.4 h1:2BvfKmzob6Bmd4YsL0zygOqfdFnK7GR4QL06Do4/p7Y=

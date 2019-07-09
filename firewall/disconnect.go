@@ -83,7 +83,7 @@ func (ssd *SSDisconnector) Disconnect(peer *xrpl.Peer) error {
 	logMsg := out.String()
 	logMsg = strings.TrimSuffix(logMsg, "\n")
 	if strings.TrimSpace(logMsg) == "" {
-		logMsg = "Peer not disconnected or `ss -K` unsupported"
+		logMsg = "Peer blocked at firewall or `ss -K` unsupported"
 	}
 
 	log.Println("firewall disconnect:", logMsg)
