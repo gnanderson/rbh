@@ -37,7 +37,8 @@ TODO:
   - [ ] provide container/docker release
   - [✔] release management
   - [✔] socket closing mechanism for banned peers
-  - [ ] correclty support ipv6
+  - [ ] correctly support ipv6
+  - [ ] connection retry on websocket connection close
 
 ## Requirements
 
@@ -80,6 +81,7 @@ Alternatively you can install with `go get github.com/gnanderson/rbh`.
 
  -  `rbh help`
  -  `rbh help run`
+ -  `rbh help ban`
  -  `rbh help show`
 
 ## Configuration
