@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/coreos/go-semver v0.3.0
-	github.com/gnanderson/xrpl v0.0.5
+	github.com/gnanderson/xrpl v0.0.6
 	github.com/godbus/dbus v5.0.1+incompatible
 	github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946
 	github.com/mattn/go-runewidth v0.0.4 // indirect
