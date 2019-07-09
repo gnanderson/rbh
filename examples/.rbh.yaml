@@ -6,6 +6,7 @@ port: 6006
 tls: true
 banlength: 1440
 repeat: 60
+docker: rippled
 whitelist:
   - 10.0.0.10
   - 10.0.0.20

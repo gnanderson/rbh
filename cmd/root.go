@@ -62,9 +62,9 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&useTls, "tls", "t", false, "use wss scheme, ommiting this flag assumes running on localhost")
 	viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr"))
 	viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
-	viper.BindPFlag("tls", rootCmd.PersistentFlags().Lookup("tls"))
-	viper.BindPFlag("passwd", rootCmd.PersistentFlags().Lookup("passwd"))
 	viper.BindPFlag("user", rootCmd.PersistentFlags().Lookup("user"))
+	viper.BindPFlag("passwd", rootCmd.PersistentFlags().Lookup("passwd"))
+	viper.BindPFlag("tls", rootCmd.PersistentFlags().Lookup("tls"))
 }
 
 // initConfig reads in config file and ENV variables if set.

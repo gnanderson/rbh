@@ -1,25 +1,22 @@
-## rbh show
+## rbh ban
 
-show blacklist and peers
+ban one or more IP addresses
 
 ### Synopsis
 
-Valid args:
-
-  candidates: show peers matching blacklist criteria
-  peers: show all connected peers
-  stable: show all stable peers
-  unstable show current unstable peers
+Ban one of more IP address provided as a space separated list of args
 
 ```
-rbh show <arg> [flags]
+rbh ban [flags]
 ```
 
 ### Options
 
 ```
-  -x, --anonymise   Anonymise the peers IP for testing/ci purposes
-  -h, --help        help for show
+  -b, --banlength int     the duration of the ban (in minutes) (default 1440)
+  -d, --docker string     Optional name of a docker container to exec the socket close on.
+  -h, --help              help for ban
+  -k, --tcpkill tcpkill   Use tcpkill instead of `ss -K` to close the banned peers socket.
 ```
 
 ### Options inherited from parent commands

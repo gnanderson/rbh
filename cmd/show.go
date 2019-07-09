@@ -76,7 +76,7 @@ func show(args []string) {
 
 	pl, err := xrpl.UnmarshalPeers(string(msg.Msg))
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"IP", "Version", "Status", "Uptime", "Public Key"})

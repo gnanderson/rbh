@@ -47,9 +47,9 @@ whether to swing the ban hammer.`,
 }
 
 var (
-	printTable           bool
+	printTable, tcpkill  bool
 	banLength, repeatCmd int
-	whitelist            string
+	whitelist, container string
 )
 
 func init() {
@@ -57,12 +57,22 @@ func init() {
 	runCmd.Flags().IntVarP(&banLength, "banlength", "b", 1440, "the duration of the ban (in minutes) for unstable peers")
 	runCmd.Flags().IntVarP(&repeatCmd, "repeat", "r", 60, "check for new peers to ban after 'repeat' seconds")
 	runCmd.Flags().StringVarP(&whitelist, "whitelist", "w", "", "Space separated list of IP's which will not be considered as candidates for the ban hammer")
+	runCmd.Flags().StringVarP(&container, "docker", "d", "", "Optional name of a docker container to exec the socket close on.")
+	runCmd.Flags().BoolVarP(&tcpkill, "tcpkill", "k", false, "Use `tcpkill` instead of `ss -K` to close the banned peers socket.")
 }
 
 func run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	n := xrpl.NewNode(viper.GetString("addr"), viper.GetString("port"), viper.GetBool("useTls"))
 	fw := firewall.NewFirewall(viper.GetInt("banlength"), viper.GetStringSlice("whitelist")...)
+
+	if viper.GetString("docker") != "" {
+		fw.Disconnector = firewall.NewSSDisconnector(viper.GetString("docker"))
+	}
+
+	if viper.GetBool("tcpkill") {
+		fw.Disconnector = firewall.NewTCPKIllDisconnector(viper.GetString("docker"))
+	}
 
 	expireBlacklist(ctx, fw)
 
