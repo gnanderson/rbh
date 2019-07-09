@@ -70,7 +70,7 @@ func newRejectRule(ip string, timeout int) (*rejectRule, error) {
 
 func (rr *rejectRule) String() string {
 	return fmt.Sprintf(
-		"rule family='%s' source address='%s' reject",
+		"rule family='%s' source address='%s/32' reject",
 		rr.family,
 		rr.source.String(),
 	)
@@ -230,9 +230,13 @@ func NewFirewall(banLength int, whiteList ...string) *Firewall {
 // blacklist so we can track the expiration and re-apply on firewalld reload.
 // IP's that are in the whitelist are ignored...
 func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
-	if fw.whitelist.contains(peer) || fw.blacklist.contains(peer) {
-		log.Printf("firewalld: peer already in blaclist %s", peer.IP().String())
+	if fw.whitelist.contains(peer) {
 		return
+	}
+
+	if fw.blacklist.contains(peer) {
+		log.Printf("firewalld: peer already in blacklist %s - disconnecting", peer.IP().String())
+		fw.Disconnect(peer)
 	}
 
 	reject, err := newRejectRule(
