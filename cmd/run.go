@@ -25,6 +25,8 @@ import (
 	"github.com/gnanderson/rbh/firewall"
 	"github.com/gnanderson/xrpl"
 	"github.com/godbus/dbus"
+	"github.com/gorilla/websocket"
+	ws "github.com/maurodelazeri/gorilla-reconnect"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -70,8 +72,6 @@ func run() error {
 		fw.Disconnector = firewall.NewTCPKIllDisconnector(viper.GetString("docker"))
 	}
 
-	expireBlacklist(ctx, fw)
-
 	cmd := xrpl.NewPeerCommand()
 	cmd.AdminUser = viper.GetString("user")
 	cmd.AdminPassword = viper.GetString("passwd")
@@ -80,35 +80,38 @@ func run() error {
 	if err := firewall.Connect(); err != nil {
 		log.Fatal("run: firewall error:", err)
 	}
+	expireBlacklist(ctx, fw)
 	refreshBans(ctx, fw)
 
-	for msg := range n.RepeatCommand(
-		ctx,
-		cmd,
-		viper.GetInt("repeat"),
-	) {
-		if msg.Err != nil {
-			log.Println("run: websocket:", msg.Err.Error())
-			cancel()
-			return msg.Err
-		}
+	msgs := n.RepeatCommand(ctx, cmd, viper.GetInt("repeat"))
 
-		pl, err := xrpl.UnmarshalPeers(string(msg.Msg))
-		if err != nil {
-			cancel()
-			return err
-		}
+	for msg := range msgs {
+		if msg.Err == nil {
+			pl, err := xrpl.UnmarshalPeers(string(msg.Msg))
+			if err != nil {
+				log.Println("run unmarshal:", err)
+				continue
+			}
 
-		for _, peer := range pl.Peers() {
-			if !peer.StableWith(xrpl.DefaultStabilityChecker) {
-				if firewall.Up() {
+			for _, peer := range pl.Peers() {
+				if !peer.StableWith(xrpl.DefaultStabilityChecker) && firewall.Up() {
 					fw.BanPeer(peer)
 				}
 			}
+
+			continue
 		}
+
+		if msg.Err != ws.ErrNotConnected && msg.MsgType != websocket.CloseMessage && msg.MsgType != -1 {
+			log.Println("run: websocket:", msg.Err.Error())
+			break
+		}
+
+		// don't thrash while the websocket is reconnecting
+		<-time.After(time.Second * 1)
 	}
 
-	log.Println("Message channel closed")
+	log.Println("run: message channel closed")
 	cancel()
 
 	return nil
@@ -124,7 +127,7 @@ func refreshBans(ctx context.Context, fwl *firewall.Firewall) {
 			case <-ctx.Done():
 				return
 			case <-notify:
-				log.Println("firewalld reloaded")
+				log.Println("run: firewalld reloaded")
 				fwl.RefreshBans()
 			}
 		}
@@ -141,7 +144,7 @@ func expireBlacklist(ctx context.Context, firewall *firewall.Firewall) {
 				ticker.Stop()
 				return
 			case <-ticker.C:
-				log.Println("flushing expired entries")
+				log.Println("run: flushing expired firewall entries")
 				firewall.Expire()
 			}
 		}

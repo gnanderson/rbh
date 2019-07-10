@@ -40,6 +40,8 @@ github.com/gnanderson/xrpl v0.0.5 h1:AyzZt4BaYFmTx7Jza1fE83PYjLFsRqpCq/CfNK/hjXM
 github.com/gnanderson/xrpl v0.0.5/go.mod h1:joaCgLQGV7m5yJMFRcMeVdFfjHOxDxnpgGUwShr5VfE=
 github.com/gnanderson/xrpl v0.0.6 h1:ZpyvnMwnUnMTWqB51QBNNEo3nAmKL6Sf8NErAAy8JKE=
 github.com/gnanderson/xrpl v0.0.6/go.mod h1:joaCgLQGV7m5yJMFRcMeVdFfjHOxDxnpgGUwShr5VfE=
+github.com/gnanderson/xrpl v0.0.7 h1:GY8oAw8SiXW992fTos0LwkW/0LEtwQM5No2jAFlQn20=
+github.com/gnanderson/xrpl v0.0.7/go.mod h1:ca1aXAj/zGU4B2TRLSYjfz1TBCnRMhYGKtuYGZ8XtIM=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
@@ -66,6 +68,8 @@ github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T
 github.com/inconshreveable/mousetrap v1.0.0 h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NHg9XEKhtSvM=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
+github.com/jpillora/backoff v0.0.0-20180909062703-3050d21c67d7 h1:K//n/AqR5HjG3qxbrBCL4vJPW0MVFSs9CPK1OOJdRME=
+github.com/jpillora/backoff v0.0.0-20180909062703-3050d21c67d7/go.mod h1:2iMrUgbbvHEiQClaW2NsSzMyGHqN+rDFqY705q49KG0=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
@@ -83,6 +87,8 @@ github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czP
 github.com/mattn/go-runewidth v0.0.4 h1:2BvfKmzob6Bmd4YsL0zygOqfdFnK7GR4QL06Do4/p7Y=
 github.com/mattn/go-runewidth v0.0.4/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
+github.com/maurodelazeri/gorilla-reconnect v0.0.0-20180328170005-42501a5438b9 h1:ZuBaZYBKi9zJFaqXyw0hN46nvBcU315To+SN+Qh0wjU=
+github.com/maurodelazeri/gorilla-reconnect v0.0.0-20180328170005-42501a5438b9/go.mod h1:jawYJmNk6FVmenPRjYlbV+OcQ9fBGqv3dZwZnUSoR48=
 github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG+4E0Y=
 github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQzvN1EDeE=
