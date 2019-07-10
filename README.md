@@ -38,7 +38,7 @@ TODO:
   - [✔] release management
   - [✔] socket closing mechanism for banned peers
   - [ ] correctly support ipv6
-  - [ ] connection retry on websocket connection close
+  - [✔] connection retry on websocket connection close
 
 ## Requirements
 
