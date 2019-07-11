@@ -65,7 +65,12 @@ func newRejectRule(ip string, timeout int) (*rejectRule, error) {
 		return nil, fmt.Errorf("firewalld: invalid IP address '%s'", IP)
 	}
 
-	return &rejectRule{family: "ipv4", source: IP, timeout: timeout}, nil
+	family := "ipv4"
+	if IP.To16() != nil {
+		family = "ipv6"
+	}
+
+	return &rejectRule{family: family, source: IP, timeout: timeout}, nil
 }
 
 func (rr *rejectRule) String() string {
