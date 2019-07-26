@@ -64,7 +64,7 @@ builds:
     hooks:
 
 sign:
-   artifacts: none
+   artifacts: checksum
 
 # Archive customization
 archive:

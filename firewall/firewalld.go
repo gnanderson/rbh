@@ -81,6 +81,34 @@ func (rr *rejectRule) String() string {
 	)
 }
 
+type dropRule struct {
+	family  string
+	source  net.IP
+	timeout int
+}
+
+func newDropRule(ip string, timeout int) (*dropRule, error) {
+	IP := net.ParseIP(ip)
+	if IP == nil {
+		return nil, fmt.Errorf("firewalld: invalid IP address '%s'", IP)
+	}
+
+	family := "ipv4"
+	if IP.To16() != nil {
+		family = "ipv6"
+	}
+
+	return &dropRule{family: family, source: IP, timeout: timeout}, nil
+}
+
+func (dr *dropRule) String() string {
+	return fmt.Sprintf(
+		"rule family='%s' source address='%s/32' drop",
+		dr.family,
+		dr.source.String(),
+	)
+}
+
 // Connect queries DBUS to see if we can retrieve the firewalld default zone and
 // therefor understand if firewalld is up
 func Connect() (err error) {
@@ -239,7 +267,7 @@ func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
 		return
 	}
 
-	reject, err := newRejectRule(
+	drop, err := newDropRule(
 		peer.IP().String(),
 		int(fw.blacklist.duration.Seconds()),
 	)
@@ -249,7 +277,7 @@ func (fw *Firewall) BanPeer(peer *xrpl.Peer) {
 		return
 	}
 
-	err = fw.addReject("public", reject.String(), int(fw.blacklist.duration.Seconds()))
+	err = fw.addReject("drop", drop.String(), int(fw.blacklist.duration.Seconds()))
 	if err != errAlreadyEnabled && err != nil {
 		log.Println(err)
 	}
