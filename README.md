@@ -27,17 +27,17 @@ advice for operating XRPL nodes. Follow them on Twitter!
 ## Status
 
 ### WARNING
-This tool is not currently fit for production use, use at your own risk.
+This tool should be tested against your test/alt net nodes before you consider deploying
 
 TODO:
   - [✔] race check data structures accessed concurrently
   - [✔] whitelist support
   - [✔] config via file and env vars
   - [✔] add to CI
-  - [ ] provide container/docker release
+  - [✘] ~provide container/docker release~ - DBUS support patchy inside a container
   - [✔] release management
   - [✔] socket closing mechanism for banned peers
-  - [ ] correctly support ipv6
+  - [✔] correctly support ipv6
   - [✔] connection retry on websocket connection close
 
 ## Requirements
