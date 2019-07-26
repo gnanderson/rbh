@@ -66,7 +66,7 @@ func newRejectRule(ip string, timeout int) (*rejectRule, error) {
 	}
 
 	family := "ipv4"
-	if IP.To16() != nil {
+	if IP.To4() == nil {
 		family = "ipv6"
 	}
 
@@ -94,7 +94,7 @@ func newDropRule(ip string, timeout int) (*dropRule, error) {
 	}
 
 	family := "ipv4"
-	if IP.To16() != nil {
+	if IP.To4() == nil {
 		family = "ipv6"
 	}
 

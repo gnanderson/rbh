@@ -130,11 +130,11 @@ func show(args []string) {
 	table.SetHeader([]string{"IP", "Status", "Version", "Uptime", "Latency", "Load", "Public Key"})
 
 	for _, peer := range peers {
-		if peer.Sanity == "" {
-			peer.Sanity = xrpl.Good
-		}
 		if peer.TooOld() {
 			peer.Sanity = xrpl.Old
+		}
+		if peer.Sanity == "" {
+			peer.Sanity = xrpl.Good
 		}
 		line := lineFromPeer(peer)
 

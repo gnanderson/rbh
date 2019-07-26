@@ -60,7 +60,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&adminUser, "user", "", "admin_user if any configured in rippled config")
 	rootCmd.PersistentFlags().StringVar(&adminPassword, "passwd", "", "admin_password if any configured in rippled config")
 	rootCmd.PersistentFlags().BoolVarP(&useTls, "tls", "t", false, "use wss scheme, omitting this flag assumes running on localhost")
-	rootCmd.PersistentFlags().StringVarP(&minVersion, "minver", "m", "1.2.3", "Minimum version number acceptable to avoid the ban hammer.")
+	rootCmd.PersistentFlags().StringVarP(&minVersion, "minver", "m", "1.2.4", "Minimum version number acceptable to avoid the ban hammer.")
 	viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr"))
 	viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
 	viper.BindPFlag("user", rootCmd.PersistentFlags().Lookup("user"))
