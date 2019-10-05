@@ -250,10 +250,8 @@ func NewFirewall(banLength int, whiteList ...string) *Firewall {
 		},
 	}
 
-	if whiteList != nil {
-		for _, entry := range whiteList {
-			fw.whitelist.add(entry)
-		}
+	for _, entry := range whiteList {
+		fw.whitelist.add(entry)
 	}
 
 	return fw

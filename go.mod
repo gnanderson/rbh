@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/coreos/go-semver v0.3.0
-	github.com/gnanderson/xrpl v0.0.9
+	github.com/gnanderson/xrpl v0.0.11
 	github.com/godbus/dbus v5.0.1+incompatible
 	github.com/gorilla/websocket v1.4.0
 	github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946

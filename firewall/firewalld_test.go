@@ -41,9 +41,7 @@ func genBlackList() *blacklist {
 func TestBlackListExpire(t *testing.T) {
 	bl := genBlackList()
 
-	select {
-	case <-time.After(time.Second * 2):
-	}
+	<-time.After(time.Second * 2)
 
 	bl.expireEntries()
 

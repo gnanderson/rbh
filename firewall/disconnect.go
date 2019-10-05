@@ -109,7 +109,11 @@ type TCPKillDisconnector struct {
 
 // NewTCPKIllDisconnector returns a Disconnector configured to use `tcpkill`
 func NewTCPKIllDisconnector(container string) *TCPKillDisconnector {
-	return &TCPKillDisconnector{Aggression: 3, Docker: container != "", Container: container}
+	return &TCPKillDisconnector{
+		Aggression: 3,
+		Docker:     container != "",
+		Container:  container,
+	}
 }
 
 // Disconnect will try to close the peer's socket

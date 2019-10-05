@@ -61,11 +61,18 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&adminPassword, "passwd", "", "admin_password if any configured in rippled config")
 	rootCmd.PersistentFlags().BoolVarP(&useTls, "tls", "t", false, "use wss scheme, omitting this flag assumes running on localhost")
 	rootCmd.PersistentFlags().StringVarP(&minVersion, "minver", "m", "1.2.4", "Minimum version number acceptable to avoid the ban hammer.")
-	viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr"))
-	viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
-	viper.BindPFlag("user", rootCmd.PersistentFlags().Lookup("user"))
-	viper.BindPFlag("passwd", rootCmd.PersistentFlags().Lookup("passwd"))
-	viper.BindPFlag("tls", rootCmd.PersistentFlags().Lookup("tls"))
+
+	chk := func(e error) {
+		if e != nil {
+			panic(e)
+		}
+	}
+
+	chk(viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr")))
+	chk(viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port")))
+	chk(viper.BindPFlag("user", rootCmd.PersistentFlags().Lookup("user")))
+	chk(viper.BindPFlag("passwd", rootCmd.PersistentFlags().Lookup("passwd")))
+	chk(viper.BindPFlag("tls", rootCmd.PersistentFlags().Lookup("tls")))
 }
 
 // initConfig reads in config file and ENV variables if set.
