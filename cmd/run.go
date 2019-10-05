@@ -19,6 +19,7 @@ limitations under the License.
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	"github.com/coreos/go-semver/semver"
@@ -46,9 +47,9 @@ whether to swing the ban hammer.`,
 }
 
 var (
-	printTable, tcpkill  bool
 	banLength, repeatCmd int
 	whitelist, container string
+	tcpkill              bool
 )
 
 func init() {
@@ -63,7 +64,12 @@ func init() {
 func run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	n := xrpl.NewNode(viper.GetString("addr"), viper.GetString("port"), viper.GetBool("useTls"))
+	n := xrpl.NewNode(
+		viper.GetString("addr"),
+		viper.GetString("port"),
+		viper.GetBool("useTls"),
+	)
+
 	fw := firewall.NewFirewall(viper.GetInt("banlength"), viper.GetStringSlice("whitelist")...)
 	if viper.GetString("docker") != "" {
 		fw.Disconnector = firewall.NewSSDisconnector(viper.GetString("docker"))
@@ -83,7 +89,12 @@ func run() error {
 	expireBlacklist(ctx, fw)
 	refreshBans(ctx, fw)
 
-	msgs := n.RepeatCommand(ctx, cmd, viper.GetInt("repeat"))
+	if repeatCmd < 1 {
+		log.Fatal("invalid repeat length, -r / --repeat must be greater than zero")
+		os.Exit(1)
+	}
+
+	msgs := n.RepeatCommand(ctx, cmd, repeatCmd)
 
 	for msg := range msgs {
 		if msg.Err == nil {

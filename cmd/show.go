@@ -17,7 +17,6 @@ limitations under the License.
 */
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -107,13 +106,13 @@ func show(args []string) {
 		uptime := time.Second * time.Duration(peer.Uptime)
 		switch peer.Sanity {
 		case xrpl.Insane:
-			peer.Sanity = fmt.Sprintf("%s", Red(peer.Sanity))
+			peer.Sanity = Red(peer.Sanity).String()
 		case xrpl.Unstable:
-			peer.Sanity = fmt.Sprintf("%s", Yellow(peer.Sanity))
+			peer.Sanity = Yellow(peer.Sanity).String()
 		case xrpl.Good:
-			peer.Sanity = fmt.Sprintf("%s", Green(peer.Sanity))
+			peer.Sanity = Green(peer.Sanity).String()
 		case xrpl.Old:
-			peer.Sanity = fmt.Sprintf("%s", Cyan(peer.Sanity))
+			peer.Sanity = Cyan(peer.Sanity).String()
 		}
 		return []string{
 			peer.IP().String(),

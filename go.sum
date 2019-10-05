@@ -44,6 +44,8 @@ github.com/gnanderson/xrpl v0.0.7 h1:GY8oAw8SiXW992fTos0LwkW/0LEtwQM5No2jAFlQn20
 github.com/gnanderson/xrpl v0.0.7/go.mod h1:ca1aXAj/zGU4B2TRLSYjfz1TBCnRMhYGKtuYGZ8XtIM=
 github.com/gnanderson/xrpl v0.0.9 h1:4f4IkSWbq6WpOFrdw3bt93ID2m2DxSXAG8D/zp/fNns=
 github.com/gnanderson/xrpl v0.0.9/go.mod h1:qof5ZshylVbI1fQVIqXogtzOY5YNuAtpMHqbHQiCIHk=
+github.com/gnanderson/xrpl v0.0.11 h1:p/UEKge75rE7lQaVvGqxd5UTBW6/FkNFM4rlEOU+Skw=
+github.com/gnanderson/xrpl v0.0.11/go.mod h1:qof5ZshylVbI1fQVIqXogtzOY5YNuAtpMHqbHQiCIHk=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
